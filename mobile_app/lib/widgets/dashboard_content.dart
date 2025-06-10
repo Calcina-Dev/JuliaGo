@@ -7,6 +7,9 @@ import 'MostOrderedBySales.dart';
 import 'MostOrderedByUnits.dart';
 import 'MostOrderedFoodSwitcher.dart';
 import '../utils/tooltip_manager.dart';
+import 'modal/RevenueReportModal.dart';
+import 'modal/OrderTimeReportModal.dart';
+import 'modal/OrderStatusReportModal.dart';
 
 class DashboardContent extends StatefulWidget {
   const DashboardContent({super.key});
@@ -17,6 +20,10 @@ class DashboardContent extends StatefulWidget {
 
 class _DashboardContentState extends State<DashboardContent>
     with TickerProviderStateMixin {
+  Map<String, dynamic>? _revenueData;
+  Map<String, dynamic>? _orderTimeData;
+  Map<String, dynamic>? _orderStatusData;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -30,9 +37,43 @@ class _DashboardContentState extends State<DashboardContent>
             _cardBlock(
               height: 360,
               title: 'Revenue',
-              onReportTap: () => _showSnack('Revenue Report tapped'),
-              child: const RevenueLineChart(),
+              onReportTap: _revenueData == null
+                  ? null
+                  : () {
+                      final semanaActual = _revenueData!['semana_actual'];
+                      final semanaAnterior = _revenueData!['semana_anterior'];
+
+                      showDialog(
+                        context: context,
+                        builder: (_) => RevenueReportModal(
+                          range:
+                              '${semanaActual['desde']} al ${semanaActual['hasta']}',
+                          semanaActual: List<double>.from(
+                            semanaActual['por_dia'].map((e) => e.toDouble()),
+                          ),
+                          semanaAnterior: List<double>.from(
+                            semanaAnterior['por_dia'].map((e) => e.toDouble()),
+                          ),
+                          totalActual: (semanaActual['total'] as num)
+                              .toDouble(),
+                          totalAnterior: (semanaAnterior['total'] as num)
+                              .toDouble(),
+                          variacion:
+                              (_revenueData!['variacion_porcentual'] as num?)
+                                  ?.toDouble() ??
+                              0.0,
+                        ),
+                      );
+                    },
+              child: RevenueLineChart(
+                onDataReady: (data) {
+                  setState(() {
+                    _revenueData = data;
+                  });
+                },
+              ),
             ),
+
             const SizedBox(height: 10),
             // Row dentro de la columna: Top Categorias / Most Ordered Food
             Row(
@@ -80,16 +121,51 @@ class _DashboardContentState extends State<DashboardContent>
             _cardBlock(
               height: 360,
               title: 'Order Time',
-              onReportTap: () => _showSnack('Order Time Report tapped'),
-              child: const OrderTimeDonutChart(),
+              onReportTap: _orderTimeData == null
+                  ? null
+                  : () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => OrderTimeReportModal(
+                          data: _orderTimeData!,
+                          rangoFechas:
+                              _orderTimeData!['rango'] ?? 'Rango desconocido',
+                        ),
+                      );
+                    },
+
+              child: OrderTimeDonutChart(
+                onDataReady: (data) {
+                  setState(() {
+                    _orderTimeData = data;
+                  });
+                },
+              ),
             ),
             const SizedBox(height: 10),
             // Order Status
             _cardBlock(
               height: 320,
               title: 'Order',
-              onReportTap: () => _showSnack('Order Report tapped'),
-              child: const OrderStatusDonutChart(),
+              onReportTap: _orderStatusData == null
+                  ? null
+                  : () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => OrderStatusReportModal(
+                          data: _orderStatusData!['por_estado'],
+                          fecha: _orderStatusData!['fecha'],
+                        ),
+                      );
+                    },
+
+              child: OrderStatusDonutChart(
+                onDataReady: (data, fecha) {
+                  setState(() {
+                    _orderStatusData = {'por_estado': data, 'fecha': fecha};
+                  });
+                },
+              ),
             ),
           ],
         );
@@ -124,19 +200,57 @@ class _DashboardContentState extends State<DashboardContent>
                               child: _cardBlock(
                                 height: 360,
                                 title: 'Order Time',
-                                onReportTap: () =>
-                                    _showSnack('Order Time Report tapped'),
-                                child: const OrderTimeDonutChart(),
+                                onReportTap: _orderTimeData == null
+                                    ? null
+                                    : () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => OrderTimeReportModal(
+                                            data: _orderTimeData!,
+                                            rangoFechas:
+                                                _orderTimeData!['rango'] ??
+                                                'Rango desconocido',
+                                          ),
+                                        );
+                                      },
+
+                                child: OrderTimeDonutChart(
+                                  onDataReady: (data) {
+                                    setState(() {
+                                      _orderTimeData = data;
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                             const SizedBox(width: 15),
                             Expanded(
                               child: _cardBlock(
-                                height: 360,
+                                height: 320,
                                 title: 'Order',
-                                onReportTap: () =>
-                                    _showSnack('Order Report tapped'),
-                                child: const OrderStatusDonutChart(),
+                                onReportTap: _orderStatusData == null
+                                    ? null
+                                    : () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => OrderStatusReportModal(
+                                            data:
+                                                _orderStatusData!['por_estado'],
+                                            fecha: _orderStatusData!['fecha'],
+                                          ),
+                                        );
+                                      },
+
+                                child: OrderStatusDonutChart(
+                                  onDataReady: (data, fecha) {
+                                    setState(() {
+                                      _orderStatusData = {
+                                        'por_estado': data,
+                                        'fecha': fecha,
+                                      };
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ],

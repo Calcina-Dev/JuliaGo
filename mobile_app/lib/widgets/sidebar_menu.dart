@@ -26,70 +26,88 @@ class SidebarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // LOGO SUPERIOR
-        Padding(
-          padding: const EdgeInsets.only(top: 32.0, bottom: 16),
-          child: Container(
-            height: 80,
-            width: 80,
-            decoration: BoxDecoration(
-              color: Colors.white, // fondo blanco neutro
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(2, 0), // sombra hacia la derecha
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // LOGO SUPERIOR
+          Padding(
+            padding: const EdgeInsets.only(top: 36.0, bottom: 16),
+            child: Container(
+              height: 80,
+              width: 80,
+              decoration: BoxDecoration(
+                color: Colors.white, // fondo blanco neutro
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(0),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/logo_dona_julia.png',
+                  fit: BoxFit.contain,
                 ),
-              ],
-            ),
-            padding: const EdgeInsets.all(0),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/logo_dona_julia.png',
-                fit: BoxFit.contain,
               ),
             ),
           ),
-        ),
 
-        // LISTA PRINCIPAL
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            children: [
-              const SizedBox(height: 24),
-              _buildSectionHeader('Menu'),
-              ...menuItems.map((item) => _buildItem(context, item)),
-              const SizedBox(height: 24),
-              _buildSectionHeader('Others'),
-              ...otherItems.map((item) => _buildItem(context, item)),
-            ],
-          ),
-        ),
-        const Divider(),
-        ListTile(
-          contentPadding: const EdgeInsets.only(left: 24.0, right: 12.0),
-          leading: const Icon(Icons.logout, size: 20, color: Color(0xFF9E9E9E)),
-          title: const Text(
-            'Cerrar sesión',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF9E9E9E),
-              fontWeight: FontWeight.w400,
+          // LISTA PRINCIPAL
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              children: [
+                const SizedBox(height: 24),
+                _buildSectionHeader('Menu'),
+                ...menuItems.map((item) => _buildItem(context, item)),
+                const SizedBox(height: 24),
+                _buildSectionHeader('Others'),
+                ...otherItems.map((item) => _buildItem(context, item)),
+              ],
             ),
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          onTap: () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
-          },
-        ),
-      ],
+          const Divider(),
+          ListTile(
+            contentPadding: const EdgeInsets.only(left: 24.0, right: 12.0),
+            leading: const Icon(
+              Icons.logout,
+              size: 20,
+              color: Color(0xFF9E9E9E),
+            ),
+            title: const Text(
+              'Cerrar sesión',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF9E9E9E),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -112,30 +130,44 @@ class SidebarMenu extends StatelessWidget {
     final icon = item['icon'] as IconData;
     final isSelected = label == selectedItem;
 
-    return ListTile(
-      contentPadding: const EdgeInsets.only(
-        left: 24.0,
-        right: 12.0,
-      ), // Sangría visual del contenido
-      leading: Icon(
-        icon,
-        size: 20,
-        color: isSelected ? const Color(0xFF007D81) : const Color(0xFF9E9E9E),
+    final selectedBgColor = const Color(0xFFE5F3F2);
+    final selectedTextColor = const Color(0xFF006A68);
+    final unselectedTextColor = const Color(0xFF444444);
+    final iconBackground = Colors.white;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: isSelected ? selectedBgColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
       ),
-      title: Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          color: isSelected ? const Color(0xFF007D81) : const Color(0xFF444444),
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        leading: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? iconBackground : Colors.transparent,
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(6),
+          child: Icon(
+            icon,
+            size: 20,
+            color: isSelected ? selectedTextColor : const Color(0xFF9E9E9E),
+          ),
         ),
+        title: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: isSelected ? selectedTextColor : unselectedTextColor,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+          onItemSelected?.call(label);
+        },
       ),
-      tileColor: isSelected ? const Color(0xFFE4F1F1) : null,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onTap: () {
-        Navigator.pop(context);
-        onItemSelected?.call(label);
-      },
     );
   }
 }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
 class RevenueLineChart extends StatefulWidget {
-  const RevenueLineChart({super.key});
+  final void Function(Map<String, dynamic> data)? onDataReady;
+
+  const RevenueLineChart({super.key, this.onDataReady});
 
   @override
   State<RevenueLineChart> createState() => _RevenueLineChartState();
@@ -15,7 +17,12 @@ class _RevenueLineChartState extends State<RevenueLineChart> {
   @override
   void initState() {
     super.initState();
-    revenueFuture = ApiService.fetchRevenueData();
+    revenueFuture = ApiService.fetchRevenueData().then((res) {
+      if (res['success'] == true && widget.onDataReady != null) {
+        widget.onDataReady!(res['data']);
+      }
+      return res;
+    });
   }
 
   @override

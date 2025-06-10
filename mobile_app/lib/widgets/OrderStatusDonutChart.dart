@@ -6,7 +6,9 @@ import '../services/api_service.dart';
 import '../utils/tooltip_manager.dart';
 
 class OrderStatusDonutChart extends StatefulWidget {
-  const OrderStatusDonutChart({super.key});
+  final void Function(Map<String, dynamic> data, String fecha)? onDataReady;
+
+  const OrderStatusDonutChart({super.key, this.onDataReady});
 
   @override
   State<OrderStatusDonutChart> createState() => _OrderStatusDonutChartState();
@@ -18,26 +20,16 @@ class _OrderStatusDonutChartState extends State<OrderStatusDonutChart> {
   OverlayEntry? _tooltipOverlay;
   final List<_SectionData> chartData = [];
   String subtitle = '';
+  String fechaConsulta = '';
+  Map<String, dynamic> dataRaw = {};
 
   final List<Map<String, dynamic>> estadosConfig = [
-    {
-      'key': 'pendiente',
-      'label': 'Pendiente',
-      'color': const Color(0xFFFFA726),
-    },
-    {
-      'key': 'en_proceso',
-      'label': 'En Proceso',
-      'color': const Color(0xFF29B6F6),
-    },
-    {'key': 'servido', 'label': 'Servido', 'color': const Color(0xFF66BB6A)},
-    {'key': 'pagado', 'label': 'Pagado', 'color': const Color(0xFFAB47BC)},
-    {'key': 'cerrado', 'label': 'Cerrado', 'color': const Color(0xFF78909C)},
-    {
-      'key': 'cancelado',
-      'label': 'Cancelado',
-      'color': const Color(0xFFE53935),
-    },
+    {'key': 'pendiente', 'label': 'Pendiente', 'color': Color(0xFFFFA726)},
+    {'key': 'en_proceso', 'label': 'En Proceso', 'color': Color(0xFF29B6F6)},
+    {'key': 'servido', 'label': 'Servido', 'color': Color(0xFF66BB6A)},
+    {'key': 'pagado', 'label': 'Pagado', 'color': Color(0xFFAB47BC)},
+    {'key': 'cerrado', 'label': 'Cerrado', 'color': Color(0xFF78909C)},
+    {'key': 'cancelado', 'label': 'Cancelado', 'color': Color(0xFFE53935)},
   ];
 
   @override
@@ -46,26 +38,25 @@ class _OrderStatusDonutChartState extends State<OrderStatusDonutChart> {
     TooltipManager.register(_removeTooltip);
     initializeDateFormatting('es').then((_) {
       final now = DateTime.now();
+      fechaConsulta = DateFormat('yyyy-MM-dd').format(now);
       subtitle = 'Hoy, ${DateFormat('dd MMM yyyy', 'es').format(now)}';
-      final hoy = DateFormat('yyyy-MM-dd').format(now);
 
       futureData =
           ApiService.get(
-            '/dashboard/estadisticas-pedidos?inicio=$hoy&fin=$hoy',
+            '/dashboard/estadisticas-pedidos?inicio=$fechaConsulta&fin=$fechaConsulta',
           ).then((res) {
             if (res.statusCode == 200) {
               final decoded =
                   ApiService.decodeResponse(res) as Map<String, dynamic>;
-              // Si el API te devuelve la fecha, úsala:
               if (decoded.containsKey('fecha')) {
                 final fecha = DateTime.parse(decoded['fecha'] as String);
                 subtitle =
                     'Hoy, ${DateFormat('dd MMM yyyy', 'es').format(fecha)}';
+                fechaConsulta = decoded['fecha'];
               }
-              return {
-                'success': true,
-                'data': decoded['por_estado'] as Map<String, dynamic>,
-              };
+              dataRaw = decoded['por_estado'] as Map<String, dynamic>;
+              widget.onDataReady?.call(dataRaw, subtitle);
+              return {'success': true, 'data': dataRaw};
             } else {
               return {'success': false, 'message': 'Error al cargar los datos'};
             }
@@ -140,13 +131,10 @@ class _OrderStatusDonutChartState extends State<OrderStatusDonutChart> {
         }
 
         final porEstado = snap.data!['data'] as Map<String, dynamic>;
-
-        // Reconstruir dinámicamente solo los estados con count > 0
         chartData.clear();
         porEstado.forEach((key, value) {
           final count = (value ?? 0) as int;
           if (count > 0) {
-            // Buscar label y color desde la configuración
             final cfg = estadosConfig.firstWhere(
               (c) => c['key'] == key,
               orElse: () => {'label': key, 'color': Colors.grey},

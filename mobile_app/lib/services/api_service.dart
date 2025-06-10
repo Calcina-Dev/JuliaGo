@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class ApiService {
-  static const baseUrl = 'http://192.168.1.2/api';
+  static const baseUrl = 'http://192.168.0.13/api';
 
   static Future<List<dynamic>> getMostOrderedProducts(String ordenarPor) async {
     final now = DateTime.now();

@@ -7,7 +7,9 @@ import '../services/api_service.dart';
 import '../utils/tooltip_manager.dart';
 
 class OrderTimeDonutChart extends StatefulWidget {
-  const OrderTimeDonutChart({super.key});
+  final void Function(Map<String, dynamic>)? onDataReady;
+
+  const OrderTimeDonutChart({super.key, this.onDataReady});
 
   @override
   State<OrderTimeDonutChart> createState() => _OrderTimeDonutChartState();
@@ -61,6 +63,16 @@ class _OrderTimeDonutChartState extends State<OrderTimeDonutChart> {
           ).then((res) {
             if (res.statusCode == 200) {
               final decoded = ApiService.decodeResponse(res);
+
+              // 🔹 Emitimos los datos al padre si hay callback
+              if (widget.onDataReady != null) {
+                widget.onDataReady!({
+                  ...decoded,
+                  'rango':
+                      subtitle, // ← 🔥 ahora sí enviamos el rango de forma segura
+                });
+              }
+
               return {'success': true, 'data': decoded};
             } else {
               return {'success': false, 'message': 'Error al cargar los datos'};

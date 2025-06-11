@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../constants/app_styles.dart';
+import 'common/sidebar_widgets.dart';
+import 'common/siderbar_utils.dart';
+import '../providers/auth_provider.dart';
 
 class SidebarMenu extends StatelessWidget {
   final void Function(String)? onItemSelected;
@@ -10,14 +15,14 @@ class SidebarMenu extends StatelessWidget {
     required this.selectedItem,
   });
 
-  final menuItems = const [
+  static const menuItems = [
     {'label': 'Dashboard', 'icon': Icons.dashboard},
     {'label': 'Food Order', 'icon': Icons.fastfood},
     {'label': 'Manage Menu', 'icon': Icons.menu_book},
     {'label': 'Customer Review', 'icon': Icons.reviews},
   ];
 
-  final otherItems = const [
+  static const otherItems = [
     {'label': 'Settings', 'icon': Icons.settings},
     {'label': 'Payment', 'icon': Icons.payment},
     {'label': 'Accounts', 'icon': Icons.account_circle},
@@ -26,147 +31,91 @@ class SidebarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final usuario = Provider.of<AuthProvider>(context).user;
+    final nombre = usuario?.name ?? 'Usuario';
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(2, 0), // sombra hacia la derecha
-          ),
-        ],
+        boxShadow: AppStyles.defaultCardShadow,
       ),
       child: Column(
         children: [
-          // LOGO SUPERIOR
+          const SizedBox(height: 36),
+
+          // Imagen redonda con inicial y nombre
           Padding(
-            padding: const EdgeInsets.only(top: 36.0, bottom: 16),
-            child: Container(
-              height: 80,
-              width: 80,
-              decoration: BoxDecoration(
-                color: Colors.white, // fondo blanco neutro
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Material(
+                  elevation: 6,
+                  shape: const CircleBorder(),
+                  shadowColor: Colors.black26,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.teal,
+                    ),
+                    child: Text(
+                      nombre.isNotEmpty ? nombre[0].toUpperCase() : 'U',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
-                ],
-              ),
-              padding: const EdgeInsets.all(0),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/logo_dona_julia.png',
-                  fit: BoxFit.contain,
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    nombre,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.teal,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 16),
+          const Divider(height: 1),
 
-          // LISTA PRINCIPAL
+          // Lista de opciones
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               children: [
                 const SizedBox(height: 24),
-                _buildSectionHeader('Menu'),
-                ...menuItems.map((item) => _buildItem(context, item)),
+                const SidebarSectionHeader(title: 'Menu'),
+                ...buildMenuSection(
+                  context: context,
+                  items: menuItems,
+                  selectedItem: selectedItem,
+                  onItemSelected: onItemSelected!,
+                ),
                 const SizedBox(height: 24),
-                _buildSectionHeader('Others'),
-                ...otherItems.map((item) => _buildItem(context, item)),
+                const SidebarSectionHeader(title: 'Others'),
+                ...buildMenuSection(
+                  context: context,
+                  items: otherItems,
+                  selectedItem: selectedItem,
+                  onItemSelected: onItemSelected!,
+                ),
               ],
             ),
           ),
+
           const Divider(),
-          ListTile(
-            contentPadding: const EdgeInsets.only(left: 24.0, right: 12.0),
-            leading: const Icon(
-              Icons.logout,
-              size: 20,
-              color: Color(0xFF9E9E9E),
-            ),
-            title: const Text(
-              'Cerrar sesión',
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF9E9E9E),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
-            },
-          ),
+          buildLogoutTile(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, bottom: 8),
-      child: Text(
-        title.toUpperCase(),
-        style: const TextStyle(
-          color: Colors.grey,
-          fontWeight: FontWeight.bold,
-          fontSize: 13,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildItem(BuildContext context, Map<String, dynamic> item) {
-    final label = item['label'] as String;
-    final icon = item['icon'] as IconData;
-    final isSelected = label == selectedItem;
-
-    final selectedBgColor = const Color(0xFFE5F3F2);
-    final selectedTextColor = const Color(0xFF006A68);
-    final unselectedTextColor = const Color(0xFF444444);
-    final iconBackground = Colors.white;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: isSelected ? selectedBgColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        leading: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? iconBackground : Colors.transparent,
-            shape: BoxShape.circle,
-          ),
-          padding: const EdgeInsets.all(6),
-          child: Icon(
-            icon,
-            size: 20,
-            color: isSelected ? selectedTextColor : const Color(0xFF9E9E9E),
-          ),
-        ),
-        title: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: isSelected ? selectedTextColor : unselectedTextColor,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          ),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-          onItemSelected?.call(label);
-        },
       ),
     );
   }

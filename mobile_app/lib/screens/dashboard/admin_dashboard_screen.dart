@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/sidebar_menu.dart';
-import '../widgets/dashboard_content.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../widgets/sidebar_menu.dart';
+import '../../widgets/dashboard_content/dashboard_content_selector.dart';
+import '../../widgets/common/app_logo.dart';
+
+
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -11,6 +15,23 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   String selectedItem = 'Dashboard';
+  String nombreUsuario = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarNombreUsuario();
+  }
+
+  Future<void> _cargarNombreUsuario() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nombre = prefs.getString('nombre') ?? '';
+    if (mounted) {
+      setState(() {
+        nombreUsuario = nombre;
+      });
+    }
+  }
 
   Widget _getContent() {
     switch (selectedItem) {
@@ -29,7 +50,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       case 'Help':
         return const Center(child: Text('Help Page'));
       default:
-        return const DashboardContent();
+        return const DashboardContentSelector();
     }
   }
 
@@ -40,6 +61,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         title: Text(selectedItem),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: AppLogo(width: 100, height: 100),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: SidebarMenu(

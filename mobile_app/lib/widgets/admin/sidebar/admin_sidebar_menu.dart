@@ -17,16 +17,17 @@ class SidebarMenu extends StatelessWidget {
 
   static const menuItems = [
     {'label': 'Dashboard', 'icon': Icons.dashboard},
-    {'label': 'Food Order', 'icon': Icons.fastfood},
-    {'label': 'Manage Menu', 'icon': Icons.menu_book},
-    {'label': 'Customer Review', 'icon': Icons.reviews},
+    {'label': 'Pedidos', 'icon': Icons.receipt_long},
+    {'label': 'Productos', 'icon': Icons.inventory_2},
+    {'label': 'Mesas', 'icon': Icons.table_restaurant},
+    {'label': 'Gestión de Menú', 'icon': Icons.menu_book},
+    {'label': 'Usuarios', 'icon': Icons.group},
   ];
 
   static const otherItems = [
-    {'label': 'Settings', 'icon': Icons.settings},
-    {'label': 'Payment', 'icon': Icons.payment},
-    {'label': 'Accounts', 'icon': Icons.account_circle},
-    {'label': 'Help', 'icon': Icons.help_outline},
+    {'label': 'Ajustes', 'icon': Icons.settings},
+    {'label': 'Pagos', 'icon': Icons.payment},
+    {'label': 'Ayuda', 'icon': Icons.help_outline},
   ];
 
   @override
@@ -41,20 +42,20 @@ class SidebarMenu extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 36),
+          const SizedBox(height: 24),
 
-          // Imagen redonda con inicial y nombre
+          // Avatar con inicial
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Material(
-                  elevation: 6,
+                  elevation: 4,
                   shape: const CircleBorder(),
-                  shadowColor: Colors.black26,
+                  shadowColor: Colors.black12,
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: 36,
+                    height: 36,
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
@@ -65,17 +66,17 @@ class SidebarMenu extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     nombre,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.teal,
                     ),
@@ -85,36 +86,43 @@ class SidebarMenu extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: 12),
           const Divider(height: 1),
 
-          // Lista de opciones
+          // Secciones
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               children: [
-                const SizedBox(height: 24),
-                const SidebarSectionHeader(title: 'Menu'),
+                const SizedBox(height: 16),
+                const SidebarSectionHeader(title: 'MENU'),
                 ...buildMenuSection(
                   context: context,
                   items: menuItems,
                   selectedItem: selectedItem,
                   onItemSelected: onItemSelected!,
+                  //iconSize: 20,
+                  //fontSize: 14,
                 ),
-                const SizedBox(height: 24),
-                const SidebarSectionHeader(title: 'Others'),
+                const SizedBox(height: 16),
+                const SidebarSectionHeader(title: 'OTHERS'),
                 ...buildMenuSection(
                   context: context,
                   items: otherItems,
                   selectedItem: selectedItem,
                   onItemSelected: onItemSelected!,
+                  //iconSize: 20,
+                  //fontSize: 14,
                 ),
               ],
             ),
           ),
 
-          const Divider(),
+          const Divider(height: 1),
           buildLogoutTile(context),
+          //, iconSize: 20, fontSize: 14),
+          const SizedBox(height: 12),
         ],
       ),
     );

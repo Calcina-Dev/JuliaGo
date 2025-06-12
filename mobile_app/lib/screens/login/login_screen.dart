@@ -38,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController: passwordController,
         );
       case ScreenType.mobilePortrait:
-      default:
        return MobileLoginView(
           emailController: emailController,
           passwordController: passwordController,

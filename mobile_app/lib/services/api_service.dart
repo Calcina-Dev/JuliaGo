@@ -4,7 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class ApiService {
-  static const baseUrl = 'http://192.168.0.240/api';
+  //static const baseUrl = 'http://192.168.0.240/api';
+  static const String baseUrl = 'https://juliago-backend-production.up.railway.app/api';
+
 
   // === LOGIN ===
   static Future<Map<String, dynamic>> login(
@@ -13,9 +15,9 @@ class ApiService {
   ) async {
     final url = Uri.parse('$baseUrl/login');
 
-    print('🔐 Iniciando login...');
-    print('📤 URL: $url');
-    print('📨 Email: $email');
+    //print('🔐 Iniciando login...');
+    //print('📤 URL: $url');
+    //print('📨 Email: $email');
 
     try {
       final response = await http.post(
@@ -23,8 +25,8 @@ class ApiService {
         body: {'email': email, 'password': password},
       );
 
-      print('📬 Status code: ${response.statusCode}');
-      print('📄 Body: ${response.body}');
+      //print('📬 Status code: ${response.statusCode}');
+      //print('📄 Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -46,7 +48,7 @@ class ApiService {
         return {'success': false, 'message': 'Credenciales incorrectas'};
       }
     } catch (e) {
-      print('❌ Error durante login: $e');
+      //print('❌ Error durante login: $e');
       return {'success': false, 'message': 'Error de red: $e'};
     }
   }

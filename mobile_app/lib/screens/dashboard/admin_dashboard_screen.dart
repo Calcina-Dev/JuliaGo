@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../widgets/sidebar_menu.dart';
-import '../../widgets/dashboard_content/dashboard_content_selector.dart';
+
+import '../../providers/dashboard_provider.dart';
+import '../../widgets/admin/sidebar/admin_sidebar_menu.dart';
+import '../../widgets/admin/dashboard/dashboard_content_selector.dart';
 import '../../widgets/common/app_logo.dart';
-
-
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -17,11 +18,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   String selectedItem = 'Dashboard';
   String nombreUsuario = '';
 
-  @override
+ @override
   void initState() {
     super.initState();
     _cargarNombreUsuario();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _cargarDashboardSiNecesario();
+    });
   }
+
 
   Future<void> _cargarNombreUsuario() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,7 +38,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
   }
 
-  Widget _getContent() {
+  void _cargarDashboardSiNecesario() {
+    final provider = Provider.of<DashboardProvider>(context, listen: false);
+    if (!provider.hasData) {
+      provider.fetchDashboardData();
+    }
+  }
+
+  Widget _getContent(DashboardProvider dashboardProvider) {
+    if (dashboardProvider.isLoading && !dashboardProvider.hasData) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     switch (selectedItem) {
       case 'Food Order':
         return const Center(child: Text('Food Order Page'));
@@ -50,33 +66,37 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       case 'Help':
         return const Center(child: Text('Help Page'));
       default:
-        return const DashboardContentSelector();
+        return const DashboardContentSelector(); // usa data del provider internamente
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(selectedItem),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: AppLogo(width: 100, height: 100),
+    return Consumer<DashboardProvider>(
+      builder: (context, dashboardProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(selectedItem),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 0),
+                child: AppLogo(width: 100, height: 100),
+              ),
+            ],
           ),
-        ],
-      ),
-      drawer: Drawer(
-        child: SidebarMenu(
-          selectedItem: selectedItem,
-          onItemSelected: (label) {
-            setState(() => selectedItem = label);
-          },
-        ),
-      ),
-      body: _getContent(),
+          drawer: Drawer(
+            child: SidebarMenu(
+              selectedItem: selectedItem,
+              onItemSelected: (label) {
+                setState(() => selectedItem = label);
+              },
+            ),
+          ),
+          body: _getContent(dashboardProvider),
+        );
+      },
     );
   }
 }

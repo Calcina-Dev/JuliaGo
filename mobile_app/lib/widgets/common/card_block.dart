@@ -37,7 +37,7 @@ class CardBlock extends StatelessWidget {
               if (icon != null)
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha((0.1 * 255).round()),
                     shape: BoxShape.circle,
                   ),
                   padding: const EdgeInsets.all(8),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../utils/tooltip_manager.dart';
-import '../../common/donut_tooltip.dart';
+import '../../utils/tooltip_manager.dart';
+import '../common/donut_tooltip.dart';
 
 class OrderTimeDonutChart extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -31,7 +31,7 @@ class _OrderTimeDonutChartState extends State<OrderTimeDonutChart> {
     _removeTooltip();
     final screenSize = MediaQuery.of(context).size;
     const tooltipWidth = 180.0;
-    const tooltipHeight = 100.0;
+    const tooltipHeight = 80.0;
 
     final left = (position.dx - tooltipWidth / 2).clamp(12.0, screenSize.width - tooltipWidth - 12.0);
     final top = (position.dy - tooltipHeight - 8).clamp(12.0, screenSize.height - tooltipHeight - 12.0);

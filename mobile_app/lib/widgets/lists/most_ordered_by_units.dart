@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../utils/icon_mapper.dart'; // función que asigna íconos según categoría
+import '../../utils/icon_mapper.dart'; // función que asigna íconos según categoría
 
 class MostOrderedByUnits extends StatelessWidget {
   final List<dynamic> productos;

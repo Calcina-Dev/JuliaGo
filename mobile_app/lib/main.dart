@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile_app/constants/app_styles.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/login/splash_screen.dart';
 import 'screens/placeholder_screen.dart';
 import 'screens/dashboard/admin_dashboard_screen.dart';
 import 'screens/login/login_screen.dart';
-import 'utils/responsive.dart';
 import 'providers/auth_provider.dart';
 import 'providers/dashboard_provider.dart';
+import 'providers/producto_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,10 +34,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()), // 👈 agregado
+        ChangeNotifierProvider(create: (_) => ProductoProvider()), 
       ],
       child: MaterialApp(
+        color: AppStyles.backgroundColor,
         title: 'JuliaGo',
         debugShowCheckedModeBanner: false,
+        
         home: const SplashScreen(),
         routes: {
           '/admin': (_) => const AdminDashboardScreen(),

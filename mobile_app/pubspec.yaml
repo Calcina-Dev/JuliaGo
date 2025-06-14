@@ -35,6 +35,8 @@ dependencies:
   fl_chart: ^0.64.0
   intl: ^0.18.1
   provider: ^6.1.1
+  flutter_staggered_grid_view: ^0.6.2
+  audioplayers: ^5.2.1 
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -68,6 +70,11 @@ flutter:
   assets:
     - assets/logo_dona_julia.png
     - assets/default_user.png
+    - assets/images/categorias/bebidas.png
+    - assets/images/categorias/platos.png
+    - assets/images/categorias/entradas.png
+    - assets/images/categorias/postres.png
+    - assets/images/categorias/default.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

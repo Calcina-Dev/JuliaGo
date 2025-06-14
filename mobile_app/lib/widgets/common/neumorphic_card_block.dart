@@ -19,26 +19,54 @@ class CardBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = AppStyles.backgroundColor;
+    //final baseColor = Colors.white;
     return Container(
       height: height,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppStyles.cardColor,
-        borderRadius: AppStyles.borderRadius16,
-        boxShadow: AppStyles.defaultCardShadow,
+        color: baseColor,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.white,
+            offset: Offset(-6, -6),
+            blurRadius: 10,
+          ),
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(6, 6),
+            blurRadius: 10,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(title, style: AppStyles.cardTitleStyle),
+              Text(
+                title,
+                style: AppStyles.cardTitleStyle,
+              ),
               const Spacer(),
               if (icon != null)
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withAlpha((0.1 * 255).round()),
+                    color: baseColor,
                     shape: BoxShape.circle,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(-3, -3),
+                        blurRadius: 5,
+                      ),
+                      BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(3, 3),
+                        blurRadius: 5,
+                      ),
+                    ],
                   ),
                   padding: const EdgeInsets.all(8),
                   child: icon!,
@@ -47,16 +75,14 @@ class CardBlock extends StatelessWidget {
                 TextButton(
                   onPressed: onReportTap,
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(80, 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: const Size(0, 36),
+                    foregroundColor: const Color(0xFF4A6CF7),
                   ),
                   child: const Text(
-                    'View Report',
-                    style: TextStyle(
-                      color: Color(0xFF4A6CF7),
-                      fontWeight: FontWeight.w500,
-                    ),
+                    'Ver reporte',
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
             ],

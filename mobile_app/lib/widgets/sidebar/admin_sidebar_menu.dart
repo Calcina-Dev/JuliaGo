@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_styles.dart';
-import '../../common/sidebar_widgets.dart';
-import '../../common/siderbar_utils.dart';
-import '../../../providers/auth_provider.dart';
+import '../../constants/app_styles.dart';
+import '../common/sidebar_widgets.dart';
+import '../common/siderbar_utils.dart';
+import '../../providers/auth_provider.dart';
 
 class SidebarMenu extends StatelessWidget {
   final void Function(String)? onItemSelected;
@@ -37,7 +37,7 @@ class SidebarMenu extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppStyles.backgroundColor,
         boxShadow: AppStyles.defaultCardShadow,
       ),
       child: Column(

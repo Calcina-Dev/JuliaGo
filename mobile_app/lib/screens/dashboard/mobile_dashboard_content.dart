@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/constants/app_styles.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/dashboard_provider.dart';
-import '../../../utils/tooltip_manager.dart';
-import '../../common/card_block.dart';
-import '../modals/revenue_report_modal.dart';
-import '../modals/order_time_report_modal.dart';
-import '../modals/order_status_report_modal.dart';
-import '../charts/revenue_line_chart.dart';
-import '../charts/order_time_donut_chart.dart';
-import '../charts/order_status_donut_chart.dart';
-import '../charts/top_categorias_bubbles.dart';
-import '../lists/most_ordered_by_units.dart';
-import '../lists/most_ordered_by_sales.dart';
-import '../lists/most_ordered_food_switcher.dart';
+import '../../providers/dashboard_provider.dart';
+import '../../utils/tooltip_manager.dart';
+import '../../widgets/common/neumorphic_card_block.dart';
+import '../../widgets/modals/glass_revenue_report_modal.dart';
+import '../../widgets/modals/order_time_report_modal.dart';
+import '../../widgets/modals/neumorphic__order_status_report_modal.dart';
+import '../../widgets/charts/revenue_line_chart.dart';
+import '../../widgets/charts/order_time_donut_chart.dart';
+import '../../widgets/charts/order_status_donut_chart.dart';
+import '../../widgets/charts/top_categorias_bubbles.dart';
+import '../../widgets/lists/most_ordered_by_units.dart';
+import '../../widgets/lists/most_ordered_by_sales.dart';
+import '../../widgets/lists/most_ordered_food_switcher.dart';
 
 
 class MobileDashboardContent extends StatelessWidget {
@@ -41,7 +42,7 @@ class MobileDashboardContent extends StatelessWidget {
     final provider = Provider.of<DashboardProvider>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: AppStyles.backgroundColor,
       body: provider.isLoading && !provider.hasData
           ? const Center(child: CircularProgressIndicator())
           : GestureDetector(

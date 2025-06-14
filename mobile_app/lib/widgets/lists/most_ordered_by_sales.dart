@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../utils/icon_mapper.dart';
+import '../../utils/icon_mapper.dart';
 
 class MostOrderedBySales extends StatelessWidget {
   final List<dynamic> productos;

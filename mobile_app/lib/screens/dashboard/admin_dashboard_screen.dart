@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/constants/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/dashboard_provider.dart';
-import '../../widgets/admin/sidebar/admin_sidebar_menu.dart';
-import '../../widgets/admin/dashboard/dashboard_content_selector.dart';
+import '../../widgets/sidebar/admin_sidebar_menu.dart';
+import 'dashboard_content_selector.dart';
 import '../../widgets/common/app_logo.dart';
+
+import '../productos/producto_content_selector.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -18,7 +21,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   String selectedItem = 'Dashboard';
   String nombreUsuario = '';
 
- @override
+  @override
   void initState() {
     super.initState();
     _cargarNombreUsuario();
@@ -26,7 +29,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _cargarDashboardSiNecesario();
     });
   }
-
 
   Future<void> _cargarNombreUsuario() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,6 +53,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
 
     switch (selectedItem) {
+      case 'Productos':
+        return const ProductoContentSelector(); // ← aquí llamamos al nuevo widget
       case 'Food Order':
         return const Center(child: Text('Food Order Page'));
       case 'Manage Menu':
@@ -66,7 +70,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       case 'Help':
         return const Center(child: Text('Help Page'));
       default:
-        return const DashboardContentSelector(); // usa data del provider internamente
+        return const DashboardContentSelector();
     }
   }
 
@@ -75,10 +79,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return Consumer<DashboardProvider>(
       builder: (context, dashboardProvider, child) {
         return Scaffold(
+          backgroundColor: AppStyles.backgroundColor,
+
           appBar: AppBar(
             title: Text(selectedItem),
-            backgroundColor: Colors.white,
+            backgroundColor: AppStyles.backgroundColor,
             foregroundColor: Colors.black,
+            elevation: 0, // quita sombra
+            scrolledUnderElevation: 0,
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 0),

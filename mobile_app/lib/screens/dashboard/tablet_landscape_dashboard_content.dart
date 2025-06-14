@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/constants/app_styles.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/dashboard_provider.dart';
-import '../../common/card_block.dart';
-import '../charts/revenue_line_chart.dart';
-import '../charts/order_time_donut_chart.dart';
-import '../charts/top_categorias_bubbles.dart';
-import '../charts/order_status_donut_chart.dart';
-import '../lists/most_ordered_by_sales.dart';
-import '../lists/most_ordered_by_units.dart';
-import '../lists/most_ordered_food_switcher.dart';
-import '../../../utils/tooltip_manager.dart';
-import '../modals/revenue_report_modal.dart';
-import '../modals/order_time_report_modal.dart';
-import '../modals/order_status_report_modal.dart';
+import '../../providers/dashboard_provider.dart';
+import '../../widgets/common/neumorphic_card_block.dart';
+import '../../widgets/charts/revenue_line_chart.dart';
+import '../../widgets/charts/order_time_donut_chart.dart';
+import '../../widgets/charts/top_categorias_bubbles.dart';
+import '../../widgets/charts/order_status_donut_chart.dart';
+import '../../widgets/lists/most_ordered_by_sales.dart';
+import '../../widgets/lists/most_ordered_by_units.dart';
+import '../../widgets/lists/most_ordered_food_switcher.dart';
+import '../../utils/tooltip_manager.dart';
+import '../../widgets/modals/glass_revenue_report_modal.dart';
+import '../../widgets/modals/order_time_report_modal.dart';
+import '../../widgets/modals/neumorphic__order_status_report_modal.dart';
 
 class TabletLandscapeDashboardContent extends StatefulWidget {
   const TabletLandscapeDashboardContent({super.key});
@@ -55,14 +56,14 @@ class _TabletLandscapeDashboardContentState
     final provider = Provider.of<DashboardProvider>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: AppStyles.backgroundColor,
       body: provider.isLoading && !provider.hasData
           ? const Center(child: CircularProgressIndicator())
           : GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () => TooltipManager.removeAll(),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(25),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -72,7 +73,7 @@ class _TabletLandscapeDashboardContentState
                       child: Column(
                         children: [
                           CardBlock(
-                            height: 360,
+                            height: 350,
                             title: 'Revenue',
                             onReportTap: provider.revenueData == null
                                 ? null
@@ -117,7 +118,7 @@ class _TabletLandscapeDashboardContentState
                             children: [
                               Expanded(
                                 child: CardBlock(
-                                  height: 320,
+                                  height: 350,
                                   title: 'Top Categorias',
                                   child: TopCategoriasBubbles(
                                     data: provider.categoriasMasVendidas!,
@@ -128,10 +129,10 @@ class _TabletLandscapeDashboardContentState
                               const SizedBox(width: 15),
                               Expanded(
                                 child: FlipCardWrapper(
-                                  height: 320,
+                                  height: 350,
                                   width: double.infinity,
                                   front: CardBlock(
-                                    height: 320,
+                                    height: 350,
                                     title: 'Most Ordered Food',
                                     icon: const Icon(Icons.sync,
                                         color: Colors.black54, size: 20),
@@ -166,7 +167,7 @@ class _TabletLandscapeDashboardContentState
                       child: Column(
                         children: [
                           CardBlock(
-                            height: 360,
+                            height: 350,
                             title: 'Order Time',
                             onReportTap: provider.orderTimeData == null
                                 ? null
@@ -193,7 +194,7 @@ class _TabletLandscapeDashboardContentState
                           ),
                           const SizedBox(height: 10),
                           CardBlock(
-                            height: 320,
+                            height: 350,
                             title: 'Order',
                             onReportTap: provider.orderStatusData == null
                                 ? null

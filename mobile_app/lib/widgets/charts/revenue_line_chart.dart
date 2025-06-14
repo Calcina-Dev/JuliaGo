@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../common/legend_item.dart';
+import '../common/legend_item.dart';
 
 class RevenueLineChart extends StatelessWidget {
   final List<double> semanaActual;

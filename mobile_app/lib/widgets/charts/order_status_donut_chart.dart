@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../utils/tooltip_manager.dart';
-import '../../common/donut_tooltip.dart';
+import '../../utils/tooltip_manager.dart';
+import '../common/donut_tooltip.dart';
 
 class OrderStatusDonutChart extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -90,20 +90,20 @@ class _OrderStatusDonutChartState extends State<OrderStatusDonutChart> {
           const Text('Estado de Pedidos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           Text(widget.fecha, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           SizedBox(
             key: _chartKey,
-            height: 130,
+            height: 160,
             child: PieChart(
               PieChartData(
-                centerSpaceRadius: 25,
-                sectionsSpace: 2,
+               sectionsSpace: 2,
+                centerSpaceRadius: 32,
                 sections: chartData.map((s) {
                   final pct = total > 0 ? (s.count / total * 100).round() : 0;
                   return PieChartSectionData(
                     value: s.count.toDouble().clamp(0.01, double.infinity),
                     color: s.color,
-                    radius: 35,
+                    radius: 42,
                     title: pct > 0 ? '$pct%' : '',
                     titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     borderSide: const BorderSide(color: Colors.white, width: 2),
@@ -125,18 +125,31 @@ class _OrderStatusDonutChartState extends State<OrderStatusDonutChart> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 12,
-            children: chartData.map((s) {
-              final pct = total > 0 ? (s.count / total * 100).round() : 0;
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(width: 12, height: 12, color: s.color),
-                  const SizedBox(width: 4),
-                  Text('${s.label} ($pct%)'),
-                ],
+          const SizedBox(height: 12),
+          
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: chartData.map((e) {
+              final percent = total > 0 ? (e.count / total * 100).round() : 0;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(color: e.color, shape: BoxShape.circle),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(e.label, style: const TextStyle(fontSize: 12, color: Colors.black)),
+                      ],
+                    ),
+                    Text('$percent%', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  ],
+                ),
               );
             }).toList(),
           ),

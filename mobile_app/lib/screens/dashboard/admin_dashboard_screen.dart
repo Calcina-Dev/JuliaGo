@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/dashboard_provider.dart';
-import '../../widgets/sidebar/admin_sidebar_menu.dart';
+import '../../widgets/sidebar/neumorphic_admin_sidebar_menu.dart';
 import 'dashboard_content_selector.dart';
 import '../../widgets/common/app_logo.dart';
 

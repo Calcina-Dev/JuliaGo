@@ -12,7 +12,7 @@ import '../../widgets/lists/most_ordered_by_sales.dart';
 import '../../widgets/lists/most_ordered_by_units.dart';
 import '../../widgets/lists/most_ordered_food_switcher.dart';
 import '../../utils/tooltip_manager.dart';
-import '../../widgets/modals/glass_revenue_report_modal.dart';
+import '../../widgets/modals/neuromorphic_revenue_report_modal.dart';
 import '../../widgets/modals/order_time_report_modal.dart';
 import '../../widgets/modals/neumorphic__order_status_report_modal.dart';
 

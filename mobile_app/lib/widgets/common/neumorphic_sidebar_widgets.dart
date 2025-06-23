@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:mobile_app/constants/app_styles.dart';
 
 class SidebarSectionHeader extends StatelessWidget {
   final String title;
@@ -38,29 +38,63 @@ class SidebarMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedBgColor = const Color(0xFFE5F3F2);
-    final selectedTextColor = const Color(0xFF006A68);
-    final unselectedTextColor = const Color(0xFF444444);
-    final iconBackground = Colors.white;
+    const selectedTextColor = Color(0xFF006A68);
+    const unselectedTextColor = Color(0xFF444444);
+    const iconColorUnselected = Color(0xFF9E9E9E);
+
+    final neumorphicDecoration = BoxDecoration(
+      color: AppStyles.backgroundColor,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.white,
+          offset: Offset(-3, -3),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+        BoxShadow(
+          color: Color(0x33000000),
+          offset: Offset(3, 3),
+          blurRadius: 5,
+          spreadRadius: 1,
+        ),
+      ],
+    );
+
+    final circleNeumorphism = BoxDecoration(
+      shape: BoxShape.circle,
+      color: AppStyles.backgroundColor,
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.white,
+          offset: Offset(-2, -2),
+          blurRadius: 4,
+        ),
+        BoxShadow(
+          color: Color(0x22000000),
+          offset: Offset(2, 2),
+          blurRadius: 4,
+        ),
+      ],
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: isSelected ? selectedBgColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: isSelected ? neumorphicDecoration : null,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         leading: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? iconBackground : Colors.transparent,
-            shape: BoxShape.circle,
-          ),
+          decoration: isSelected
+              ? circleNeumorphism
+              : const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.transparent,
+                ),
           padding: const EdgeInsets.all(6),
           child: Icon(
             icon,
             size: 20,
-            color: isSelected ? selectedTextColor : const Color(0xFF9E9E9E),
+            color: isSelected ? selectedTextColor : iconColorUnselected,
           ),
         ),
         title: Text(

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../utils/tooltip_manager.dart';
 import '../../widgets/common/neumorphic_card_block.dart';
-import '../../widgets/modals/glass_revenue_report_modal.dart';
+import '../../widgets/modals/neuromorphic_revenue_report_modal.dart';
 import '../../widgets/modals/order_time_report_modal.dart';
 import '../../widgets/modals/neumorphic__order_status_report_modal.dart';
 import '../../widgets/charts/revenue_line_chart.dart';

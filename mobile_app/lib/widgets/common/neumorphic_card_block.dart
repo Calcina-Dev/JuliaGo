@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_styles.dart';
 
-class CardBlock extends StatelessWidget {
+class CardBlock extends StatefulWidget {
   final String title;
   final double height;
   final Widget child;
@@ -18,11 +18,18 @@ class CardBlock extends StatelessWidget {
   });
 
   @override
+  State<CardBlock> createState() => _CardBlockState();
+}
+
+class _CardBlockState extends State<CardBlock> {
+  bool _isReportPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     final baseColor = AppStyles.backgroundColor;
-    //final baseColor = Colors.white;
+
     return Container(
-      height: height,
+      height: widget.height,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: baseColor,
@@ -46,11 +53,11 @@ class CardBlock extends StatelessWidget {
           Row(
             children: [
               Text(
-                title,
+                widget.title,
                 style: AppStyles.cardTitleStyle,
               ),
               const Spacer(),
-              if (icon != null)
+              if (widget.icon != null)
                 Container(
                   decoration: BoxDecoration(
                     color: baseColor,
@@ -69,26 +76,65 @@ class CardBlock extends StatelessWidget {
                     ],
                   ),
                   padding: const EdgeInsets.all(8),
-                  child: icon!,
+                  child: widget.icon!,
                 ),
-              if (onReportTap != null)
-                TextButton(
-                  onPressed: onReportTap,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    minimumSize: const Size(0, 36),
-                    foregroundColor: const Color(0xFF4A6CF7),
-                  ),
-                  child: const Text(
-                    'Ver reporte',
-                    style: TextStyle(fontWeight: FontWeight.w500),
+              if (widget.onReportTap != null)
+                GestureDetector(
+                  onTapDown: (_) {
+                    setState(() => _isReportPressed = true);
+                  },
+                  onTapUp: (_) {
+                    setState(() => _isReportPressed = false);
+                    widget.onReportTap?.call();
+                  },
+                  onTapCancel: () {
+                    setState(() => _isReportPressed = false);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 100),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: baseColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: _isReportPressed
+                          ? const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(-2, -2),
+                                blurRadius: 4,
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(2, 2),
+                                blurRadius: 4,
+                              ),
+                            ]
+                          : const [
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(-2, -2),
+                                blurRadius: 4,
+                              ),
+                              BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(2, 2),
+                                blurRadius: 4,
+                              ),
+                            ],
+                    ),
+                    child: const Text(
+                      'Ver reporte',
+                      style: TextStyle(
+                        color: Color(0xFF4A6CF7),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 14),
-          Expanded(child: child),
+          Expanded(child: widget.child),
         ],
       ),
     );

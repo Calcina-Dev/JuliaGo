@@ -14,7 +14,7 @@ class NeumorphicCardContainer extends StatelessWidget {
     this.isPressed = false,
     this.isActive = true,
     this.margin,
-    this.padding = const EdgeInsets.all(16),
+    this.padding = const EdgeInsets.all(20),
     this.color,
   });
 
@@ -26,8 +26,8 @@ class NeumorphicCardContainer extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      transform: isActive ? Matrix4.identity() : Matrix4.identity()..scale(0.95),
-      margin: margin ?? EdgeInsets.symmetric(vertical: isActive ? 15 : 40),
+      transform: isActive ? Matrix4.identity() : Matrix4.identity()..scale(0.99),
+      margin: margin ?? EdgeInsets.symmetric(vertical: isActive ? 10 : 30,horizontal: 5),
       decoration: BoxDecoration(
         color: baseColor,
         borderRadius: BorderRadius.circular(24),

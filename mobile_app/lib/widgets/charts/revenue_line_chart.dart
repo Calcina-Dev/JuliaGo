@@ -50,7 +50,7 @@ class RevenueLineChart extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 150,
+          height: 140,
           child: LineChart(
             LineChartData(
               minX: 0,
@@ -66,6 +66,8 @@ class RevenueLineChart extends StatelessWidget {
               ),
               titlesData: FlTitlesData(
                 leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)), 
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,

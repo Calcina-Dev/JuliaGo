@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_styles.dart';
-import '../common/sidebar_widgets.dart';
-import '../common/siderbar_utils.dart';
+import '../common/neumorphic_sidebar_widgets.dart';
+import '../common/neumorphic_bottom_buttons.dart';
 import '../../providers/auth_provider.dart';
 
 class SidebarMenu extends StatelessWidget {
@@ -19,16 +19,13 @@ class SidebarMenu extends StatelessWidget {
     {'label': 'Dashboard', 'icon': Icons.dashboard},
     {'label': 'Pedidos', 'icon': Icons.receipt_long},
     {'label': 'Productos', 'icon': Icons.inventory_2},
+    {'label': 'Pagos', 'icon': Icons.payment},
     {'label': 'Mesas', 'icon': Icons.table_restaurant},
     {'label': 'Gestión de Menú', 'icon': Icons.menu_book},
     {'label': 'Usuarios', 'icon': Icons.group},
   ];
 
-  static const otherItems = [
-    {'label': 'Ajustes', 'icon': Icons.settings},
-    {'label': 'Pagos', 'icon': Icons.payment},
-    {'label': 'Ayuda', 'icon': Icons.help_outline},
-  ];
+  
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +41,37 @@ class SidebarMenu extends StatelessWidget {
         children: [
           const SizedBox(height: 24),
 
-          // Avatar con inicial
+          // Avatar con efecto neumorfismo
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Material(
-                  elevation: 4,
-                  shape: const CircleBorder(),
-                  shadowColor: Colors.black12,
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.teal,
-                    ),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppStyles.backgroundColor,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(-4, -4),
+                        blurRadius: 6,
+                        spreadRadius: 1,
+                      ),
+                      BoxShadow(
+                        color: Color(0x30000000),
+                        offset: Offset(4, 4),
+                        blurRadius: 6,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Center(
                     child: Text(
                       nombre.isNotEmpty ? nombre[0].toUpperCase() : 'U',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Colors.teal,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -102,26 +109,16 @@ class SidebarMenu extends StatelessWidget {
                   items: menuItems,
                   selectedItem: selectedItem,
                   onItemSelected: onItemSelected!,
-                  //iconSize: 20,
-                  //fontSize: 14,
                 ),
                 const SizedBox(height: 16),
-                const SidebarSectionHeader(title: 'OTHERS'),
-                ...buildMenuSection(
-                  context: context,
-                  items: otherItems,
-                  selectedItem: selectedItem,
-                  onItemSelected: onItemSelected!,
-                  //iconSize: 20,
-                  //fontSize: 14,
-                ),
+                
               ],
             ),
           ),
 
           const Divider(height: 1),
-          buildLogoutTile(context),
-          //, iconSize: 20, fontSize: 14),
+         buildBottomActionButtons(context, selectedItem, onItemSelected!),
+
           const SizedBox(height: 12),
         ],
       ),
